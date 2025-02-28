@@ -1,0 +1,10 @@
+pandas
+python-dotenv==1.0.1
+openai==1.60.0
+#scikit-learn
+#mlxtend
+#pprintpp
+#firebase-admin==6.0.1
+#google-cloud-storage==2.18.2
+pinecone
+runpod==1.7.1
