@@ -764,9 +764,9 @@ User:
 
 * Run the docker container with the environment variables of installed packages below:
 $ docker run -it \
-> -e PINECONE_API_KEY="pcsk_7K7sPt_Myerwx9GofxEfQED1vvFMJgcJdt7Txt9ZxpTkKBKzX7JsFGbEeyjdk6Qrpj8Vif" \
+> -e PINECONE_API_KEY="" \
 > -e PINECONE_INDEX_NAME="coffeeshop" \
-> -e RUNPOD_TOKEN='rpa_JDSCV1XFLEDGG0E56PCTAKV2RHR841T4KTRQQZUVkpjjkm' \
+> -e RUNPOD_TOKEN='' \
 > -e RUNPOD_CHATBOT_URL='https://api.runpod.ai/v2/vllm-ydggzj1v0bj46m/openai/v1' \
 > -e RUNPOD_EMBEDDING_URL='https://api.runpod.ai/v2/2ble084temonhm/openai/v1' \
 > -e MODEL_NAME='meta-llama/Llama-3.2-1B-Instruct' \
