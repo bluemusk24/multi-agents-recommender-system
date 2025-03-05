@@ -1,0 +1,243 @@
+# Hugging Face AI-Agents
+* https://huggingface.co/learn/agents-course/unit0/introduction
+
+# HF_TOKEN --> "insert HF_TOKEN"
+
+* What is a Large Language Model?
+An LLM is a type of AI model that excels at understanding and generating human language. They are trained on vast amounts of text data, allowing them to learn patterns, structure, and even nuance in language. These models typically consist of many millions of parameters.
+Most LLMs nowadays are built on the Transformer architecture—a deep learning architecture based on the “Attention” algorithm, that has gained significant interest since the release of BERT from Google in 2018.
+
+* There are 3 types of transformers :
+
+1. Encoders
+An encoder-based Transformer takes text (or other data) as input and outputs a dense representation (or embedding) of that text. 
+Example: BERT from Google
+Use Cases: Text classification, semantic search, Named Entity Recognition
+Typical Size: Millions of parameters
+
+2. Decoders
+A decoder-based Transformer focuses on generating new tokens to complete a sequence, one token at a time.
+Example: Llama from Meta
+Use Cases: Text generation, chatbots, code generation
+Typical Size: Billions (in the US sense, i.e., 10^9) of parameters
+
+3. Seq2Seq (Encoder–Decoder)
+A sequence-to-sequence Transformer combines an encoder and a decoder. The encoder first processes the input sequence into a context representation, then the decoder generates an output sequence.
+Example: T5, BART,
+Use Cases: Translation, Summarization, Paraphrasing
+Typical Size: Millions of parameters
+ 
+- Although Large Language Models come in various forms, LLMs are typically decoder-based models with billions of parameters.
+- The underlying principle of an LLM is simple yet highly effective: its objective is to predict the next token, given a sequence of previous tokens. A “token” is the unit of information an LLM works with. You can think of a “token” as if it was a “word”, but for efficiency reasons LLMs don’t use whole words.
+
+* Tools:
+A Tool is a function given to the LLM. This function should fulfill a clear objective. A good tool should be something that complements the power of an LLM.
+
+For instance, if you need to perform arithmetic, giving a calculator tool to your LLM will provide better results than relying on the native capabilities of the model.
+
+Furthermore, LLMs predict the completion of a prompt based on their training data, which means that their internal knowledge only includes events prior to their training. Therefore, if your agent needs up-to-date data you must provide it through some tool.
+
+A Tool should contain:
+
+- A textual description of what the function does.
+- A Callable (something to perform an action).
+- Arguments with typings.
+- (Optional) Outputs with typings.
+
+* Understanding AI Agents through the Thought-Action-Observation Cycle;
+The Core Components
+Agents work in a continuous cycle of: thinking (Thought) → acting (Act) and observing (Observe).
+
+Let’s break down these actions together:
+
+1. Thought: The LLM part of the Agent decides what the next step should be. e.g. ReAct (reason and act) i.e think step by step before acting.
+2. Action: The agent takes an action, by calling the tools with the associated arguments.
+3. Observation: The model reflects on the response from the tool.
+
+- The Thought-Action-Observation Cycle
+The three components work together in a continuous loop. To use an analogy from programming, the agent uses a while loop: the loop continues until the objective of the agent has been fulfilled.
+
+- Actions are the concrete steps an AI agent takes to interact with its environment. Whether it’s browsing the web for information or controlling a physical device, each action is a deliberate operation executed by the agent. For example, an agent assisting with customer service might retrieve customer data, offer support articles, or transfer issues to a human representative.
+
+* Observe: Integrating Feedback to Reflect and Adapt
+Observations are how an Agent perceives the consequences of its actions.
+
+They provide crucial information that fuels the Agent’s thought process and guides future actions.
+
+They are signals from the environment—whether it’s data from an API, error messages, or system logs—that guide the next cycle of thought.
+
+In the observation phase, the agent:
+1. Collects Feedback: Receives data or confirmation that its action was successful (or not).
+2. Appends Results: Integrates the new information into its existing context, effectively updating its memory.
+3. Adapts its Strategy: Uses this updated context to refine subsequent thoughts and actions.
+
+* Smolagents:
+To make this Agent, we’re going to use smolagents, a library that provides a framework for developing your agents with ease.
+
+This lightweight library is designed for simplicity, but it abstracts away much of the complexity of building an Agent, allowing you to focus on designing your agent’s behavior.
+
+We’re going to get deeper into smolagents in the next Unit. Meanwhile, you can also check this blog post or the library’s repo in GitHub.
+
+In short, smolagents is a library that focuses on codeAgent, a kind of agent that performs “Actions” through code blocks, and then “Observes” results by executing the code.
+
+Here is an example of what we’ll build!
+
+We provided our agent with an Image generation tool and asked it to generate an image of a cat.
+
+The agent inside smolagents is going to have the same behaviors as the custom one we built previously: it’s going to think, act and observe in cycle until it reaches a final answer.
+
+* Homework link: https://huggingface.co/spaces/bluemusk24/First_agent_template1/blob/main/app.py, https://huggingface.co/spaces/bluemusk24/First_agent_template1/resolve/main/app.py
+
+
+# Bonus Unit: Finetuning a LLM for Function Calling
+
+* LLMs are finetuned using the following processes:
+1️⃣ Chat Templates
+Chat templates structure interactions between users and AI models, ensuring consistent and contextually appropriate responses. They include components like system prompts and role-based messages.
+
+2️⃣ Supervised Fine-Tuning
+Supervised Fine-Tuning (SFT) is a critical process for adapting pre-trained language models to specific tasks. It involves training the model on a task-specific dataset with labeled examples. For a detailed guide on SFT, including key steps and best practices, see the supervised fine-tuning section of the TRL documentation.
+
+3️⃣ Low Rank Adaptation (LoRA)
+- Low Rank Adaptation (LoRA) is a technique for fine-tuning language models by adding low-rank matrices to the model’s layers. This allows for efficient fine-tuning while preserving the model’s pre-trained knowledge. One of the key benefits of LoRA is the significant memory savings it offers, making it possible to fine-tune large models on hardware with limited resources. A lightweight and efficient fine-tuning method that cuts down on computational and storage overhead. LoRA makes training large models faster, cheaper, and easier to deploy.
+- LoRA (Low-Rank Adaptation of Large Language Models)
+- LoRA is a popular and lightweight training technique that significantly reduces the number of trainable parameters.
+
+It works by inserting a smaller number of new weights as an adapter into the model to train. This makes training with LoRA much faster, memory-efficient, and produces smaller model weights (a few hundred MBs), which are easier to store and share.
+
+4️⃣ Evaluation
+Evaluation is a crucial step in the fine-tuning process. It allows us to measure the performance of the model on a task-specific dataset.
+
+* What is Function Calling?
+Function-calling is a way for an LLM to take actions on its environment. It was first introduced in GPT-4, and was later reproduced in other models.
+
+Just like the tools of an Agent, function-calling gives the model the capacity to take an action on its environment. However, the function calling capacity is learned by the model, and relies less on prompting than other agents techniques.
+
+
+## Unit 2: Introduction to Agentic Frameworks ( smolagents, LlamaIndex, LangGraph)
+
+When to Use an Agentic Framework:
+An agentic framework is not always needed when building an application around LLMs. They provide flexibility in the workflow to efficiently solve a specific task, but they’re not always necessary.
+
+Sometimes, predefined workflows are sufficient to fulfill user requests, and there is no real need for an agentic framework. If the approach to build an agent is simple, like a chain of prompts, using plain code may be enough. The advantage is that the developer will have full control and understanding of their system without abstractions.
+
+However, when the workflow becomes more complex, such as letting an LLM call functions or using multiple agents, these abstractions start to become helpful.
+
+Considering these ideas, we can already identify the need for some features:
+
+* An LLM engine that powers the system.
+* A list of tools the agent can access.
+* A parser for extracting tool calls from the LLM output.
+* A system prompt synced with the parser.
+* A memory system.
+* Error logging and retry mechanisms to control LLM mistakes. We’ll explore how these topics are resolved in various frameworks, including smolagents, LlamaIndex, and LangGraph.
+
+## 2.1 - Introduction to smolagents Framework:
+
+Module Overview
+This module provides a comprehensive overview of key concepts and practical strategies for building intelligent agents using smolagents.
+
+With so many open-source frameworks available, it’s essential to understand the components and capabilities that make smolagents a useful option or to determine when another solution might be a better fit.
+
+We’ll explore critical agent types, including "code agents" designed for software development tasks, "tool calling agents" for creating modular, function-driven workflows, and "retrieval agents" that access and synthesize information. Additionally, we’ll cover the orchestration of multiple agents as well as the integration of vision capabilities and web browsing, which unlock new possibilities for dynamic and context-aware applications.
+
+In this unit, you will learn to build AI agents with the smolagents library. Your agents will be able to search for data, execute code, and interact with web pages. You will also learn how to combine multiple agents to create more powerful systems.
+
+* Note: check CodeAgents.ipynb, Tool-Calling Agents.ipynb and Retrieval Agents.ipynb for codes procedures.
+
+### Inspecting and Tracking RUNS of Agents with OpenTelemetry : https://huggingface.co/docs/smolagents/tutorials/inspect_runs
+
+## 2.2 - Tools (tools.ipynb)
+
+As we explored in unit 1, agents use tools to perform various actions. In smolagents, tools are treated as functions that an LLM can call within an agent system.
+
+To interact with a tool, the LLM needs an interface description with these key components:
+
+* Name: What the tool is called
+* Tool description: What the tool does
+* Input types and descriptions: What arguments the tool accepts
+* Output type: What the tool returns
+
+For instance, while preparing for a party at Wayne Manor, Alfred needs various tools to gather information - from searching for catering services to finding party theme ideas. Here’s how a simple search tool interface might look:
+
+* Name: web_search
+* Tool description: Searches the web for specific queries
+* Input: query (string) - The search term to look up
+* Output: String containing the search results
+
+* Tool Creation Methods:
+In smolagents, tools can be defined in two ways:
+
+1. Using the @tool decorator for simple function-based tools: The @tool decorator is the recommended way to define simple tools.
+Using this approach, we define a function with:
+
+a. A clear and descriptive function name that helps the LLM understand its purpose.
+b. Type hints for both inputs and outputs to ensure proper usage.
+c. A detailed description, including an Args: section where each argument is explicitly described. These descriptions provide valuable context for the LLM, so it’s important to write them carefully.
+
+2. Creating a subclass of Tool for more complex functionality:
+This approach involves creating a subclass of Tool. For complex tools, we can implement a class instead of a Python function. The class wraps the function with metadata that helps the LLM understand how to use it effectively. In this class, we define:
+
+a. name: The tool’s name.
+b. description: A description used to populate the agent’s system prompt.
+c. inputs: A dictionary with keys type and description, providing information to help the Python interpreter process inputs.
+d. output_type: Specifies the expected output type.
+e. forward: The method containing the inference logic to execute.
+
+3. Default Toolbox
+smolagents comes with a set of pre-built tools that can be directly injected into your agent. The default toolbox includes:
+
+* PythonInterpreterTool
+* FinalAnswerTool
+* UserInputTool
+* DuckDuckGoSearchTool
+* GoogleSearchTool
+* VisitWebpageTool
+* Alfred could use various tools to ensure a flawless party at Wayne Manor:
+
+First, he could use the DuckDuckGoSearchTool to find creative superhero-themed party ideas.
+
+For catering, he’d rely on the GoogleSearchTool to find the highest-rated services in Gotham.
+
+To manage seating arrangements, Alfred could run calculations with the PythonInterpreterTool.
+
+Once everything is gathered, he’d compile the plan using the FinalAnswerTool.
+
+With these tools, Alfred guarantees the party is both exceptional and seamless. 🦇💡
+
+## 2.3 - Building Agentic RAG Systems (retrieval_agents.ipynb)
+
+Agentic RAG (Retrieval-Augmented Generation) extends traditional RAG systems by combining autonomous agents with dynamic knowledge retrieval.
+
+While traditional RAG systems use an LLM to answer queries based on retrieved data, agentic RAG enables intelligent control of both retrieval and generation processes, improving efficiency and accuracy.
+
+Traditional RAG systems face key limitations, such as relying on a single retrieval step and focusing on direct semantic similarity with the user’s query, which may overlook relevant information.
+
+Agentic RAG addresses these issues by allowing the agent to autonomously formulate search queries, critique retrieved results, and conduct multiple retrieval steps for a more tailored and comprehensive output.
+
+## 2.4 - Multi-Agent Systems
+
+Multi-agent systems enable specialized agents to collaborate on complex tasks, improving modularity, scalability, and robustness. Instead of relying on a single agent, tasks are distributed among agents with distinct capabilities.
+
+In smolagents, different agents can be combined to generate Python code, call external tools, perform web searches, and more. By orchestrating these agents, we can create powerful workflows.
+
+A typical setup might include:
+
+* A Manager Agent for task delegation
+* A Code Interpreter Agent for code execution
+* A Web Search Agent for information retrieval
+
+## Multi-Agent Systems in Action
+
+A multi-agent system consists of multiple specialized agents working together under the coordination of an Orchestrator Agent. This approach enables complex workflows by distributing tasks among agents with distinct roles.
+
+For example, a Multi-Agent RAG system can integrate:
+
+* A Web Agent for browsing the internet.
+* A Retriever Agent for fetching information from knowledge bases.
+* An Image Generation Agent for producing visuals.
+* All of these agents operate under an orchestrator that manages task delegation and interaction.
+
+# Vision agents -- vision_agents.ipynb
+
+## 3 - LLAMAINDEX FRAMEWORK:
