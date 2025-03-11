@@ -238,6 +238,82 @@ For example, a Multi-Agent RAG system can integrate:
 * An Image Generation Agent for producing visuals.
 * All of these agents operate under an orchestrator that manages task delegation and interaction.
 
-# Vision agents -- vision_agents.ipynb
+# 2.5 - Vision agents -- vision_agents.ipynb
 
-## 3 - LLAMAINDEX FRAMEWORK:
+
+## 3 - Introduction to LlamaIndex Framework: check downloaded codes and JPEGs for individual processes.
+
+Ask a question#
+Now we can ask the agent to do some math:
+
+
+response = await workflow.run(user_msg="What is 20+(2*4)?")
+print(response)
+
+* Note that this is asynchronous code. It will work in a notebook environment, but if you want to run it in regular Python you'll need to wrap it an asynchronous function, like this:
+
+async def main():
+    response = await workflow.run(user_msg="What is 20+(2*4)?")
+    print(response)
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+
+* This should give you output similar to the following: The result of (20 + (2 times 4)) is 28.
+
+### Using LLama-Index to search the web:
+
+* %pip install tavily-python
+
+* from tavily import AsyncTavilyClient
+
+async def search_web(query: str) -> str:
+    """Useful for using the web to answer questions."""
+    client = AsyncTavilyClient(api_key="tvly-...")
+    return str(await client.search(query))
+
+* from llama_index.core.agent.workflow import AgentWorkflow
+
+workflow = AgentWorkflow.from_tools_or_functions(
+    [search_web],
+    llm=llm,
+    system_prompt="You are a helpful assistant that can search the web for information.",
+)
+
+* Running the Agent
+Now that our agent is created, we can run it!
+
+response = await workflow.run(user_msg="What is the weather in San Francisco?")
+print(str(response))
+The current weather in San Francisco is as follows:
+
+- **Temperature**: 13.3°C (55.9°F)
+- **Condition**: Sunny
+- **Wind**: 4.0 mph (6.5 kph) from the NNE
+- **Humidity**: 57%
+- **Pressure**: 1021 mb (30.16 in)
+- **Visibility**: 16 km (9 miles)
+
+
+* Maintaining State
+By default, the AgentWorkflow will maintain stateless between runs. This means that the agent will not have any memory of previous runs.
+
+To maintain state, we need to keep track of the previous state. Since the AgentWorkflow is a Workflow, the state is stored in the Context. This can be passed between runs to maintain state and history.
+
+from llama_index.core.workflow import Context
+
+ctx = Context(workflow)
+
+response = await workflow.run(
+    user_msg="My name is Logan, nice to meet you!", ctx=ctx
+)
+print(str(response))
+Nice to meet you, Logan! How can I assist you today?
+response = await workflow.run(user_msg="What is my name?", ctx=ctx)
+print(str(response))
+Your name is Logan.
+
+## 4 - Langchain Framework:
